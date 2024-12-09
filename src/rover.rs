@@ -6,8 +6,12 @@ pub struct Rover {
 
 impl Rover {
     pub fn execute_commands(&mut self, commands: &str) -> String {
-        for _command in commands.chars() {
-            self.direction = self.direction.turn_right();
+        for command in commands.chars() {
+            match command {
+                'R' => self.direction = self.direction.turn_right(),
+                'L' => self.direction = self.direction.turn_left(),
+                _ => (),
+            }
         }
         format!("0:0:{}", self.direction.char())
     }
