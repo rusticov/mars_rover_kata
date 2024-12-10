@@ -4,34 +4,41 @@ type Coordinate = i8;
 
 #[derive(Default)]
 struct Location {
-    x: Coordinate,
-    y: Coordinate,
+    east: Coordinate,
+    north: Coordinate,
 }
 
 impl Location {
     fn move_forwards(&self, direction: Direction) -> Location {
         match direction {
             Direction::North => Location {
-                x: self.x,
-                y: self.y + 1,
+                east: self.east,
+                north: self.north + 1,
             },
             Direction::South => Location {
-                x: self.x,
-                y: self.y - 1,
+                east: self.east,
+                north: self.north - 1,
             },
             Direction::East => Location {
-                x: self.x + 1,
-                y: self.y,
+                east: self.east + 1,
+                north: self.north,
             },
             Direction::West => Location {
-                x: self.x - 1,
-                y: self.y,
+                east: self.east - 1,
+                north: self.north,
             },
         }
     }
 
+    fn teleport_north_south(&self, y: Coordinate) -> Location {
+        Location {
+            east: self.east,
+            north: y,
+        }
+    }
+
     fn format(&self, separator: &str) -> String {
-        format!("{}{}{}", self.x, separator, self.y)
+        format!("{}{}{}", self.east, separator, self.north)
     }
 }
 
@@ -54,23 +61,23 @@ impl Rover {
                     self.location = self.location.move_forwards(self.direction);
                     match self.direction {
                         Direction::North => {
-                            if self.location.y == Self::GRID_LONGITUDE_SIZE {
-                                self.location.y = 0;
+                            if self.location.north == Self::GRID_LONGITUDE_SIZE {
+                                self.location.north = 0;
                             }
                         }
                         Direction::South => {
-                            if self.location.y < 0 {
-                                self.location.y = Self::GRID_LONGITUDE_SIZE - 1;
+                            if self.location.north < 0 {
+                                self.location.north = Self::GRID_LONGITUDE_SIZE - 1;
                             }
                         }
                         Direction::East => {
-                            if self.location.x == Self::GRID_LATITUDE_SIZE {
-                                self.location.x = 0;
+                            if self.location.east == Self::GRID_LATITUDE_SIZE {
+                                self.location.east = 0;
                             }
                         }
                         Direction::West => {
-                            if self.location.x < 0 {
-                                self.location.x = Self::GRID_LATITUDE_SIZE - 1;
+                            if self.location.east < 0 {
+                                self.location.east = Self::GRID_LATITUDE_SIZE - 1;
                             }
                         }
                     }
