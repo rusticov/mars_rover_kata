@@ -9,6 +9,16 @@ struct Location {
 }
 
 impl Location {
+    #[inline]
+    fn north(&self) -> Coordinate {
+        self.north
+    }
+
+    #[inline]
+    fn east(&self) -> Coordinate {
+        self.east
+    }
+
     fn move_forwards(&self, direction: Direction) -> Location {
         match direction {
             Direction::North => Location {
@@ -61,22 +71,22 @@ impl Rover {
                     self.location = self.location.move_forwards(self.direction);
                     match self.direction {
                         Direction::North => {
-                            if self.location.north == Self::GRID_LONGITUDE_SIZE {
+                            if self.location.north() == Self::GRID_LONGITUDE_SIZE {
                                 self.location.north = 0;
                             }
                         }
                         Direction::South => {
-                            if self.location.north < 0 {
+                            if self.location.north() < 0 {
                                 self.location.north = Self::GRID_LONGITUDE_SIZE - 1;
                             }
                         }
                         Direction::East => {
-                            if self.location.east == Self::GRID_LATITUDE_SIZE {
+                            if self.location.east() == Self::GRID_LATITUDE_SIZE {
                                 self.location.east = 0;
                             }
                         }
                         Direction::West => {
-                            if self.location.east < 0 {
+                            if self.location.east() < 0 {
                                 self.location.east = Self::GRID_LATITUDE_SIZE - 1;
                             }
                         }
