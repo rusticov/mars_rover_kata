@@ -72,31 +72,36 @@ impl Grid {
 }
 
 impl Grid {
-    const GRID_LONGITUDE_SIZE: Coordinate = 10;
-    const GRID_LATITUDE_SIZE: Coordinate = 10;
+    const GRID_SIZE: Coordinate = 10;
 
     pub(crate) fn check_rover_move_against_rules(&self, to: Location) -> Option<Location> {
         if self.obstacles.iter().any(|x| *x == to) {
             return None;
         }
 
+        let on_grid_location = self.replace_leaving_rover_back_onto_grid(to);
+
+        Some(on_grid_location)
+    }
+
+    fn replace_leaving_rover_back_onto_grid(&self, to: Location) -> Location {
         let mut new_location = to;
-        if new_location.north() == Self::GRID_LONGITUDE_SIZE {
+        if new_location.north() == Self::GRID_SIZE {
             new_location = new_location.teleport_north(0)
         }
 
         if new_location.north() < 0 {
-            new_location = new_location.teleport_north(Self::GRID_LONGITUDE_SIZE - 1)
+            new_location = new_location.teleport_north(Self::GRID_SIZE - 1)
         }
 
-        if new_location.east() == Self::GRID_LATITUDE_SIZE {
+        if new_location.east() == Self::GRID_SIZE {
             new_location = new_location.teleport_east(0)
         }
 
         if new_location.east() < 0 {
-            new_location = new_location.teleport_east(Self::GRID_LATITUDE_SIZE - 1)
+            new_location = new_location.teleport_east(Self::GRID_SIZE - 1)
         }
 
-        Some(new_location)
+        new_location
     }
 }
