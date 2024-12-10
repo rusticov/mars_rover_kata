@@ -4,7 +4,7 @@ use yare::parameterized;
 
 #[test]
 fn rover_starts_at_origin_facing_north() {
-    let mut rover = Rover::new();
+    let mut rover = Rover::default();
     let rover_end_position = rover.execute_commands("");
     assert_eq!(rover_end_position, "0:0:N")
 }
@@ -20,7 +20,7 @@ fn rover_starts_at_origin_facing_north() {
     turn_left_4_times = {"LLLL", "0:0:N"},
 )]
 fn rover_can_turn(commands: &str, expected_final_rover_position: &str) {
-    let mut rover = Rover::new();
+    let mut rover = Rover::default();
 
     let rover_end_position = rover.execute_commands(commands);
 
@@ -40,7 +40,7 @@ fn rover_can_turn(commands: &str, expected_final_rover_position: &str) {
     move_west_multiple_times = {"LMM", "8:0:W"},
 )]
 fn rover_move_forwards(commands: &str, expected_final_rover_position: &str) {
-    let mut rover = Rover::new();
+    let mut rover = Rover::default();
 
     let rover_end_position = rover.execute_commands(commands);
 

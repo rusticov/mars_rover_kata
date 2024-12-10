@@ -2,6 +2,7 @@ use crate::direction::Direction;
 
 type Coordinate = u8;
 
+#[derive(Default)]
 pub struct Rover {
     direction: Direction,
     y: Coordinate,
@@ -50,15 +51,5 @@ impl Rover {
         }
 
         format!("{}:{}:{}", self.x, self.y, self.direction.char())
-    }
-}
-
-impl Rover {
-    pub fn new() -> Rover {
-        Rover {
-            direction: Direction::North,
-            y: 0,
-            x: 0,
-        }
     }
 }

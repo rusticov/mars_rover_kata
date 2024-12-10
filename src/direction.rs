@@ -1,4 +1,6 @@
+#[derive(Default)]
 pub enum Direction {
+    #[default]
     North,
     East,
     South,
