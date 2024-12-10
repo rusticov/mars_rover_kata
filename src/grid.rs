@@ -62,36 +62,24 @@ impl Grid {
     const GRID_LONGITUDE_SIZE: Coordinate = 10;
     const GRID_LATITUDE_SIZE: Coordinate = 10;
 
-    pub(crate) fn move_to_location(&self, location: Location, direction: Direction) -> Location {
-        match direction {
-            Direction::North => {
-                if location.north() == Self::GRID_LONGITUDE_SIZE {
-                    location.teleport_north(0)
-                } else {
-                    location
-                }
-            }
-            Direction::South => {
-                if location.north() < 0 {
-                    location.teleport_north(Self::GRID_LONGITUDE_SIZE - 1)
-                } else {
-                    location
-                }
-            }
-            Direction::East => {
-                if location.east() == Self::GRID_LATITUDE_SIZE {
-                    location.teleport_east(0)
-                } else {
-                    location
-                }
-            }
-            Direction::West => {
-                if location.east() < 0 {
-                    location.teleport_east(Self::GRID_LATITUDE_SIZE - 1)
-                } else {
-                    location
-                }
-            }
+    pub(crate) fn move_to_location(&self, location: Location) -> Location {
+        let mut new_location = location;
+        if new_location.north() == Self::GRID_LONGITUDE_SIZE {
+            new_location = new_location.teleport_north(0)
         }
+
+        if new_location.north() < 0 {
+            new_location = new_location.teleport_north(Self::GRID_LONGITUDE_SIZE - 1)
+        }
+
+        if new_location.east() == Self::GRID_LATITUDE_SIZE {
+            new_location = new_location.teleport_east(0)
+        }
+
+        if new_location.east() < 0 {
+            new_location = new_location.teleport_east(Self::GRID_LATITUDE_SIZE - 1)
+        }
+
+        new_location
     }
 }

@@ -23,7 +23,7 @@ impl<'a> Rover<'a> {
                 'L' => self.direction = self.direction.turn_left(),
                 'M' => {
                     let location = self.location.move_forwards(self.direction);
-                    self.location = self.grid.move_to_location(location, self.direction);
+                    self.location = self.grid.move_to_location(location);
                 }
                 _ => (),
             }
