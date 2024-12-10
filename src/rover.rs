@@ -1,6 +1,6 @@
 use crate::direction::Direction;
 
-type Coordinate = u8;
+type Coordinate = i8;
 
 #[derive(Default)]
 struct Location {
@@ -29,34 +29,40 @@ impl Rover {
             match command {
                 'R' => self.direction = self.direction.turn_right(),
                 'L' => self.direction = self.direction.turn_left(),
-                'M' => match self.direction {
-                    Direction::North => {
-                        self.location.y += 1;
-                        if self.location.y == Self::GRID_LONGITUDE_SIZE {
-                            self.location.y = 0;
+                'M' => {
+                    match self.direction {
+                        Direction::North => {
+                            self.location.y += 1;
+                        }
+                        Direction::South => self.location.y -= 1,
+                        Direction::East => {
+                            self.location.x += 1;
+                        }
+                        Direction::West => self.location.x -= 1,
+                    }
+                    match self.direction {
+                        Direction::North => {
+                            if self.location.y == Self::GRID_LONGITUDE_SIZE {
+                                self.location.y = 0;
+                            }
+                        }
+                        Direction::South => {
+                            if self.location.y < 0 {
+                                self.location.y = Self::GRID_LONGITUDE_SIZE - 1;
+                            }
+                        }
+                        Direction::East => {
+                            if self.location.x == Self::GRID_LATITUDE_SIZE {
+                                self.location.x = 0;
+                            }
+                        }
+                        Direction::West => {
+                            if self.location.x < 0 {
+                                self.location.x = Self::GRID_LATITUDE_SIZE - 1;
+                            }
                         }
                     }
-                    Direction::South => {
-                        self.location.y = if self.location.y == 0 {
-                            Self::GRID_LONGITUDE_SIZE - 1
-                        } else {
-                            self.location.y - 1
-                        }
-                    }
-                    Direction::East => {
-                        self.location.x += 1;
-                        if self.location.x == Self::GRID_LATITUDE_SIZE {
-                            self.location.x = 0;
-                        }
-                    }
-                    Direction::West => {
-                        self.location.x = if self.location.x == 0 {
-                            Self::GRID_LATITUDE_SIZE - 1
-                        } else {
-                            self.location.x - 1
-                        }
-                    }
-                },
+                }
                 _ => (),
             }
         }
