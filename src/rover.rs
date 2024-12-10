@@ -9,6 +9,27 @@ struct Location {
 }
 
 impl Location {
+    fn move_forwards(&self, direction: Direction) -> Location {
+        match direction {
+            Direction::North => Location {
+                x: self.x,
+                y: self.y + 1,
+            },
+            Direction::South => Location {
+                x: self.x,
+                y: self.y - 1,
+            },
+            Direction::East => Location {
+                x: self.x + 1,
+                y: self.y,
+            },
+            Direction::West => Location {
+                x: self.x - 1,
+                y: self.y,
+            },
+        }
+    }
+
     fn format(&self, separator: &str) -> String {
         format!("{}{}{}", self.x, separator, self.y)
     }
@@ -30,16 +51,7 @@ impl Rover {
                 'R' => self.direction = self.direction.turn_right(),
                 'L' => self.direction = self.direction.turn_left(),
                 'M' => {
-                    match self.direction {
-                        Direction::North => {
-                            self.location.y += 1;
-                        }
-                        Direction::South => self.location.y -= 1,
-                        Direction::East => {
-                            self.location.x += 1;
-                        }
-                        Direction::West => self.location.x -= 1,
-                    }
+                    self.location = self.location.move_forwards(self.direction);
                     match self.direction {
                         Direction::North => {
                             if self.location.y == Self::GRID_LONGITUDE_SIZE {
