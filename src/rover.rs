@@ -19,6 +19,20 @@ impl Location {
         self.east
     }
 
+    fn teleport_north(&self, north: Coordinate) -> Location {
+        Location {
+            east: self.east,
+            north,
+        }
+    }
+
+    fn teleport_east(&self, east: Coordinate) -> Location {
+        Location {
+            east,
+            north: self.north,
+        }
+    }
+
     fn move_forwards(&self, direction: Direction) -> Location {
         match direction {
             Direction::North => Location {
@@ -37,13 +51,6 @@ impl Location {
                 east: self.east - 1,
                 north: self.north,
             },
-        }
-    }
-
-    fn teleport_north_south(&self, y: Coordinate) -> Location {
-        Location {
-            east: self.east,
-            north: y,
         }
     }
 
@@ -72,22 +79,24 @@ impl Rover {
                     match self.direction {
                         Direction::North => {
                             if self.location.north() == Self::GRID_LONGITUDE_SIZE {
-                                self.location.north = 0;
+                                self.location = self.location.teleport_north(0);
                             }
                         }
                         Direction::South => {
                             if self.location.north() < 0 {
-                                self.location.north = Self::GRID_LONGITUDE_SIZE - 1;
+                                self.location =
+                                    self.location.teleport_north(Self::GRID_LONGITUDE_SIZE - 1);
                             }
                         }
                         Direction::East => {
                             if self.location.east() == Self::GRID_LATITUDE_SIZE {
-                                self.location.east = 0;
+                                self.location = self.location.teleport_east(0);
                             }
                         }
                         Direction::West => {
                             if self.location.east() < 0 {
-                                self.location.east = Self::GRID_LATITUDE_SIZE - 1;
+                                self.location =
+                                    self.location.teleport_east(Self::GRID_LATITUDE_SIZE - 1);
                             }
                         }
                     }
