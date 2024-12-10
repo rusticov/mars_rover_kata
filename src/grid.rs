@@ -1,6 +1,6 @@
 use crate::direction::Direction;
 
-type Coordinate = i8;
+pub type Coordinate = i8;
 
 #[derive(Default)]
 pub struct Location {

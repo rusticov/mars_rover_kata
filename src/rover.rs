@@ -1,14 +1,21 @@
 use crate::direction::Direction;
-use crate::grid::{Grid, Location};
+use crate::{Grid, Location};
 
-#[derive(Default)]
-pub struct Rover {
-    grid: Grid,
+pub struct Rover<'a> {
+    grid: &'a Grid,
     direction: Direction,
     location: Location,
 }
 
-impl Rover {
+impl<'a> Rover<'a> {
+    pub fn new(grid: &'a Grid) -> Self {
+        Rover {
+            grid,
+            direction: Default::default(),
+            location: Default::default(),
+        }
+    }
+
     pub fn execute_commands(&mut self, commands: &str) -> String {
         for command in commands.chars() {
             match command {
