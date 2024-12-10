@@ -1,4 +1,4 @@
-use mars_rover_kata::{Grid, Rover};
+use mars_rover_kata::{Grid, Location, Rover};
 use pretty_assertions::assert_eq;
 use yare::parameterized;
 
@@ -50,4 +50,16 @@ fn rover_move_forwards(commands: &str, expected_final_rover_position: &str) {
     let rover_end_position = rover.execute_commands(commands);
 
     pretty_assertions::assert_eq!(rover_end_position, expected_final_rover_position)
+}
+
+#[test]
+fn rover_stops_when_obstacle_is_in_the_way() {
+    let mut grid = Grid::default();
+    grid.add_obstable(Location::new(0, 2));
+
+    let mut rover = Rover::new(&grid);
+
+    let rover_end_position = rover.execute_commands("MM");
+
+    assert_eq!(rover_end_position, "O:0:1:N")
 }

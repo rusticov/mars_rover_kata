@@ -1,14 +1,19 @@
 use crate::direction::Direction;
+use std::cmp::PartialEq;
 
 pub type Coordinate = i8;
 
-#[derive(Default)]
+#[derive(Copy, Clone, Default, PartialEq)]
 pub struct Location {
     east: Coordinate,
     north: Coordinate,
 }
 
 impl Location {
+    pub fn new(east: Coordinate, north: Coordinate) -> Location {
+        Location { east, north }
+    }
+
     #[inline]
     pub fn north(&self) -> Coordinate {
         self.north
@@ -56,14 +61,26 @@ impl Location {
 }
 
 #[derive(Default)]
-pub struct Grid {}
+pub struct Grid {
+    obstacles: Vec<Location>,
+}
+
+impl Grid {
+    pub fn add_obstable(&mut self, at: Location) {
+        self.obstacles.push(at);
+    }
+}
 
 impl Grid {
     const GRID_LONGITUDE_SIZE: Coordinate = 10;
     const GRID_LATITUDE_SIZE: Coordinate = 10;
 
-    pub(crate) fn move_to_location(&self, location: Location) -> Location {
-        let mut new_location = location;
+    pub(crate) fn check_rover_move_against_rules(&self, to: Location) -> Option<Location> {
+        if self.obstacles.iter().any(|x| *x == to) {
+            return None;
+        }
+
+        let mut new_location = to;
         if new_location.north() == Self::GRID_LONGITUDE_SIZE {
             new_location = new_location.teleport_north(0)
         }
@@ -80,6 +97,6 @@ impl Grid {
             new_location = new_location.teleport_east(Self::GRID_LATITUDE_SIZE - 1)
         }
 
-        new_location
+        Some(new_location)
     }
 }
