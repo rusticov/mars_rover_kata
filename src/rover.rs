@@ -3,10 +3,21 @@ use crate::direction::Direction;
 type Coordinate = u8;
 
 #[derive(Default)]
+struct Location {
+    x: Coordinate,
+    y: Coordinate,
+}
+
+impl Location {
+    fn format(&self, separator: &str) -> String {
+        format!("{}{}{}", self.x, separator, self.y)
+    }
+}
+
+#[derive(Default)]
 pub struct Rover {
     direction: Direction,
-    y: Coordinate,
-    x: Coordinate,
+    location: Location,
 }
 
 impl Rover {
@@ -20,29 +31,29 @@ impl Rover {
                 'L' => self.direction = self.direction.turn_left(),
                 'M' => match self.direction {
                     Direction::North => {
-                        self.y += 1;
-                        if self.y == Self::GRID_LONGITUDE_SIZE {
-                            self.y = 0;
+                        self.location.y += 1;
+                        if self.location.y == Self::GRID_LONGITUDE_SIZE {
+                            self.location.y = 0;
                         }
                     }
                     Direction::South => {
-                        self.y = if self.y == 0 {
+                        self.location.y = if self.location.y == 0 {
                             Self::GRID_LONGITUDE_SIZE - 1
                         } else {
-                            self.y - 1
+                            self.location.y - 1
                         }
                     }
                     Direction::East => {
-                        self.x += 1;
-                        if self.x == Self::GRID_LATITUDE_SIZE {
-                            self.x = 0;
+                        self.location.x += 1;
+                        if self.location.x == Self::GRID_LATITUDE_SIZE {
+                            self.location.x = 0;
                         }
                     }
                     Direction::West => {
-                        self.x = if self.x == 0 {
+                        self.location.x = if self.location.x == 0 {
                             Self::GRID_LATITUDE_SIZE - 1
                         } else {
-                            self.x - 1
+                            self.location.x - 1
                         }
                     }
                 },
@@ -50,6 +61,6 @@ impl Rover {
             }
         }
 
-        format!("{}:{}:{}", self.x, self.y, self.direction.char())
+        format!("{}:{}", self.location.format(":"), self.direction.char())
     }
 }
