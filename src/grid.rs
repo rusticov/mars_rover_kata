@@ -1,6 +1,52 @@
 use crate::direction::Direction;
 use std::cmp::PartialEq;
 
+#[derive(Default)]
+pub struct Grid {
+    obstacles: Vec<Location>,
+}
+
+impl Grid {
+    pub fn add_obstable(&mut self, at: Location) {
+        self.obstacles.push(at);
+    }
+}
+
+impl Grid {
+    const GRID_SIZE: Coordinate = 10;
+
+    pub(crate) fn check_rover_move_against_rules(&self, to: Location) -> Option<Location> {
+        if self.obstacles.iter().any(|x| *x == to) {
+            return None;
+        }
+
+        let on_grid_location = self.replace_leaving_rover_back_onto_grid(to);
+
+        Some(on_grid_location)
+    }
+
+    fn replace_leaving_rover_back_onto_grid(&self, to: Location) -> Location {
+        let mut new_location = to;
+        if new_location.north() == Self::GRID_SIZE {
+            new_location = new_location.teleport_north(0)
+        }
+
+        if new_location.north() < 0 {
+            new_location = new_location.teleport_north(Self::GRID_SIZE - 1)
+        }
+
+        if new_location.east() == Self::GRID_SIZE {
+            new_location = new_location.teleport_east(0)
+        }
+
+        if new_location.east() < 0 {
+            new_location = new_location.teleport_east(Self::GRID_SIZE - 1)
+        }
+
+        new_location
+    }
+}
+
 pub type Coordinate = i8;
 
 #[derive(Copy, Clone, Default, PartialEq)]
@@ -57,51 +103,5 @@ impl Location {
                 north: self.north,
             },
         }
-    }
-}
-
-#[derive(Default)]
-pub struct Grid {
-    obstacles: Vec<Location>,
-}
-
-impl Grid {
-    pub fn add_obstable(&mut self, at: Location) {
-        self.obstacles.push(at);
-    }
-}
-
-impl Grid {
-    const GRID_SIZE: Coordinate = 10;
-
-    pub(crate) fn check_rover_move_against_rules(&self, to: Location) -> Option<Location> {
-        if self.obstacles.iter().any(|x| *x == to) {
-            return None;
-        }
-
-        let on_grid_location = self.replace_leaving_rover_back_onto_grid(to);
-
-        Some(on_grid_location)
-    }
-
-    fn replace_leaving_rover_back_onto_grid(&self, to: Location) -> Location {
-        let mut new_location = to;
-        if new_location.north() == Self::GRID_SIZE {
-            new_location = new_location.teleport_north(0)
-        }
-
-        if new_location.north() < 0 {
-            new_location = new_location.teleport_north(Self::GRID_SIZE - 1)
-        }
-
-        if new_location.east() == Self::GRID_SIZE {
-            new_location = new_location.teleport_east(0)
-        }
-
-        if new_location.east() < 0 {
-            new_location = new_location.teleport_east(Self::GRID_SIZE - 1)
-        }
-
-        new_location
     }
 }
